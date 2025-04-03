@@ -10,7 +10,6 @@ public class EmployeeEntity {
     private BigDecimal salary;
 
     public long getId() {
-
         return id;
     }
 

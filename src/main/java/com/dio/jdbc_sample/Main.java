@@ -22,33 +22,60 @@ public class Main {
 //        }
 
         var flyway = Flyway.configure()
-                .dataSource("jdbc:mysql://localhost:3306/jdbcsample", "", "")
+                .dataSource("jdbc:mysql://localhost:3306/jdbcsample", "root", "")
                 .load();
         flyway.migrate();
 
-//        var employee = new EmployeeEntity();
-//
-//        employee.setName("pedro");
-//        employee.setSalary(new BigDecimal("4000.00"));
-//        employee.setBirthday(OffsetDateTime.now().minusYears(24));
-//
-//        employeeDAO.insert(employee);
-//
-//        System.out.println(employee);
+        var employee = new EmployeeEntity();
+
+        employee.setName("pedro");
+        employee.setSalary(new BigDecimal("4000.00"));
+        employee.setBirthday(OffsetDateTime.now().minusYears(24));
+
+        System.out.println(employee);
+        employeeDAO.insert(employee);
+        System.out.println(employee);
+
+        var employee2 = new EmployeeEntity();
+        employee2.setName("caio");
+        employee2.setSalary(new BigDecimal("7000.00"));
+        employee2.setBirthday(OffsetDateTime.now().minusYears(21));
+
+        System.out.println(employee2);
+        employeeDAO.insert(employee2);
+        System.out.println(employee2);
+
+        var employee3 = new EmployeeEntity();
+        employee3.setName("Carlos");
+        employee3.setSalary(new BigDecimal("3000.00"));
+        employee3.setBirthday(OffsetDateTime.now().minusYears(26));
+
+        System.out.println(employee3);
+        employeeDAO.insert(employee3);
+        System.out.println(employee3);
+
+        var employee4 = new EmployeeEntity();
+        employee4.setName("Jão");
+        employee4.setSalary(new BigDecimal("2000.00"));
+        employee4.setBirthday(OffsetDateTime.now().minusYears(26));
+
+        System.out.println(employee4);
+        employeeDAO.insert(employee4);
+        System.out.println(employee4);
 
        // employeeDAO.findAll().forEach(System.out::println);
 
         //System.out.println(employeeDAO.findById(1));
 
-        /*var employee = new EmployeeEntity();
-        employee.setId(2);
-        employee.setName("Golias");
-        employee.setSalary(new BigDecimal("500.00"));
-        employee.setBirthday(OffsetDateTime.now().minusYears(28));
+        var employeeUpdate = new EmployeeEntity();
+        employeeUpdate.setId(employee2.getId());
+        employeeUpdate.setName("Golias");
+        employeeUpdate.setSalary(new BigDecimal("500.00"));
+        employeeUpdate.setBirthday(OffsetDateTime.now().minusYears(28));
 
-        employeeDAO.update(employee);*/
+        employeeDAO.update(employeeUpdate);
 
-        //employeeDAO.delete(4);
+        employeeDAO.delete(employee4.getId());
 
     }
 }

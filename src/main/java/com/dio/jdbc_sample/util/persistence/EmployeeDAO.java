@@ -14,26 +14,31 @@ import static java.time.ZoneOffset.UTC;
 
 public class EmployeeDAO {
 
-    public void insert(final EmployeeEntity entity){
-        try(var connection = ConnectionUtil.getConnection();
-            var statement = connection.createStatement()
-        ){
-            var sql = "INSERT INTO employees (name, salary, birthday) values ('"+
-                    entity.getName() +"', '"+
-                    entity.getSalary().toString()+"', '"+
-                    formatOffSetDateTime(entity.getBirthday())+
-                    "')";
+    public void insert(final EmployeeEntity entity) {
+        String sql = "INSERT INTO employees (name, salary, birthday) VALUES (?, ?, ?)";
 
-            if (statement instanceof StatementImpl impl)
-                entity.setId(impl.getLastInsertID());
-            statement.executeUpdate(sql);
-            System.out.printf("Foram afetados %s registros na base de dados", statement.getUpdateCount());
+        try (var connection = ConnectionUtil.getConnection();
+             var statement = connection.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
 
+            statement.setString(1, entity.getName());
+            statement.setBigDecimal(2, entity.getSalary());
+            statement.setString(3, formatOffSetDateTime(entity.getBirthday()));
+
+            int affectedRows = statement.executeUpdate();
+            System.out.printf("Foram afetados %s registros na base de dados%n", affectedRows);
+
+            // Pega o ID gerado automaticamente
+            try (var generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    entity.setId(generatedKeys.getLong(1)); // Agora o ID está correto!
+                }
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     public void update(final EmployeeEntity entity){
         try(var connection = ConnectionUtil.getConnection();
@@ -101,16 +106,16 @@ public class EmployeeDAO {
         try(var connection = ConnectionUtil.getConnection();
             var statement = connection.createStatement()
         ){
-            statement.executeQuery("SELECT name FROM employees WHERE id = " + id);
+            statement.executeQuery("SELECT * FROM employees WHERE id = " + id);
 
             var result = statement.getResultSet();
             if (result.next()){
-                //entity.setId(result.getLong("id"));
+                entity.setId(result.getLong("id"));
                 entity.setName(result.getString("name"));
-                //entity.setSalary(result.getBigDecimal("salary"));
-                /*var birthdayInstant = result.getTimestamp("birthday").toInstant();
+                entity.setSalary(result.getBigDecimal("salary"));
+                var birthdayInstant = result.getTimestamp("birthday").toInstant();
                 var birthday = OffsetDateTime.ofInstant(birthdayInstant, UTC);
-                entity.setBirthday(birthday);*/
+                entity.setBirthday(birthday);
             }
 
         } catch (SQLException e) {
