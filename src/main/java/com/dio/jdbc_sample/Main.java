@@ -1,6 +1,7 @@
 package com.dio.jdbc_sample;
 
 import com.dio.jdbc_sample.util.persistence.ConnectionUtil;
+import com.dio.jdbc_sample.util.persistence.EmployeeAuditDAO;
 import com.dio.jdbc_sample.util.persistence.EmployeeDAO;
 import com.dio.jdbc_sample.util.persistence.Entity.EmployeeEntity;
 import org.flywaydb.core.Flyway;
@@ -13,6 +14,7 @@ import java.time.OffsetDateTime;
 public class Main {
 
     private final static EmployeeDAO employeeDAO = new EmployeeDAO();
+    private final static EmployeeAuditDAO employeeAuditDAO = new EmployeeAuditDAO();
 
     public static void main(String[] args) {
 //        try(var connection = ConnectionUtil.getConnection()){
@@ -76,6 +78,8 @@ public class Main {
         employeeDAO.update(employeeUpdate);
 
         employeeDAO.delete(employee4.getId());
+
+        employeeAuditDAO.findAll().forEach(System.out::println);
 
     }
 }

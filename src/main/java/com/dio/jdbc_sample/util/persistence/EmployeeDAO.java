@@ -39,7 +39,6 @@ public class EmployeeDAO {
         }
     }
 
-
     public void update(final EmployeeEntity entity){
         try(var connection = ConnectionUtil.getConnection();
             var statement = connection.createStatement()
