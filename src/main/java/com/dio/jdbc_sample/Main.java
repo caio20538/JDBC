@@ -5,17 +5,25 @@ import com.dio.jdbc_sample.util.persistence.EmployeeAuditDAO;
 import com.dio.jdbc_sample.util.persistence.EmployeeDAO;
 import com.dio.jdbc_sample.util.persistence.EmployeeParamDAO;
 import com.dio.jdbc_sample.util.persistence.Entity.EmployeeEntity;
+import net.datafaker.Faker;
 import org.flywaydb.core.Flyway;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.Locale;
+import java.util.stream.Stream;
+
+import static java.time.ZoneOffset.UTC;
 
 
 public class Main {
 
     private final static EmployeeParamDAO employeeDAO = new EmployeeParamDAO();
     private final static EmployeeAuditDAO employeeAuditDAO = new EmployeeAuditDAO();
+    private final static Faker faker = new Faker(new Locale("pt", "BR"));
 
     public static void main(String[] args) {
 //        try(var connection = ConnectionUtil.getConnection()){
@@ -25,12 +33,12 @@ public class Main {
 //        }
 
         var flyway = Flyway.configure()
-                .dataSource("jdbc:mysql://localhost:3306/jdbcsample", "root", "")
+                .dataSource("jdbc:mysql://localhost:3306/jdbcsample", "root", "!")
                 .load();
         flyway.migrate();
 
-        var employee = new EmployeeEntity();
-
+//        var employee = new EmployeeEntity();
+//
 //        employee.setName("pedro");
 //        employee.setSalary(new BigDecimal("4000.00"));
 //        employee.setBirthday(OffsetDateTime.now().minusYears(24));
@@ -38,15 +46,15 @@ public class Main {
 //        System.out.println(employee);
 //        employeeDAO.insert(employee);
 //        System.out.println(employee);
-
-        var employee2 = new EmployeeEntity();
-        employee2.setName("caio");
-        employee2.setSalary(new BigDecimal("7000.00"));
-        employee2.setBirthday(OffsetDateTime.now().minusYears(21));
-
-        System.out.println(employee2);
-        employeeDAO.insert(employee2);
-        System.out.println(employee2);
+//
+//        var employee2 = new EmployeeEntity();
+//        employee2.setName("caio");
+//        employee2.setSalary(new BigDecimal("7000.00"));
+//        employee2.setBirthday(OffsetDateTime.now().minusYears(21));
+//
+//        System.out.println(employee2);
+//        employeeDAO.insert(employee2);
+//        System.out.println(employee2);
 //
 //        var employee3 = new EmployeeEntity();
 //        employee3.setName("Carlos");
@@ -70,17 +78,30 @@ public class Main {
 
         //System.out.println(employeeDAO.findById(1));
 
-        var employeeUpdate = new EmployeeEntity();
-        employeeUpdate.setId(employee2.getId());
-        employeeUpdate.setName("Petherson'");
-        employeeUpdate.setSalary(new BigDecimal("2000.00"));
-        employeeUpdate.setBirthday(OffsetDateTime.now().minusYears(21));
-//
-        employeeDAO.update(employeeUpdate);
+//        var employeeUpdate = new EmployeeEntity();
+//        employeeUpdate.setId(employee2.getId());
+//        employeeUpdate.setName("Petherson'");
+//        employeeUpdate.setSalary(new BigDecimal("2000.00"));
+//        employeeUpdate.setBirthday(OffsetDateTime.now().minusYears(21));
+////
+//        employeeDAO.update(employeeUpdate);
 //
 //        employeeDAO.delete(employee4.getId());
+//
+//        employeeAuditDAO.findAll().forEach(System.out::println);
+        var entities = Stream.generate(() -> {
+            var employees = new EmployeeEntity();
+            employees.setName(faker.name().fullName());
+            employees.setSalary(new BigDecimal(faker.number().digits(4)));
 
-       // employeeAuditDAO.findAll().forEach(System.out::println);
+            int idade = faker.number().numberBetween(20, 41); // Gera uma idade entre 20 e 40 anos
+            LocalDate dataNascimento = LocalDate.now().minusYears(idade);
+            OffsetDateTime dataNascimentoOffset = OffsetDateTime.of(dataNascimento, LocalTime.MIN, UTC);
 
+            employees.setBirthday(dataNascimentoOffset);
+            return employees;
+        }).limit(10000).toList();
+
+        employeeDAO.insertBath(entities);
     }
 }

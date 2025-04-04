@@ -63,6 +63,41 @@ public class EmployeeParamDAO {
         }
     }
 
+    public void insertBath(final List<EmployeeEntity> entities) {
+        String sql = "INSERT INTO employees (name, salary, birthday) VALUES (?, ?, ?)";
+
+        try (var connection = ConnectionUtil.getConnection()) {
+            try (var statement = connection.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)){
+                connection.setAutoCommit(false);
+
+                //dessa  forma eu quebro em lotes e tenho mais controle dos commits
+
+                //para que serve?
+                // transações e evitar duplicação de transação
+                for (int i = 0; i < entities.size(); i++) {
+                    statement.setString(1, entities.get(i).getName());
+                    statement.setBigDecimal(2, entities.get(i).getSalary());
+                    statement.setTimestamp(3,
+                            Timestamp.valueOf(entities.get(i).getBirthday().atZoneSimilarLocal(UTC).toLocalDateTime())
+                    );
+                    statement.addBatch();
+
+                    if (i % 1000 == 0 || i == entities.size() -1)
+                        statement.executeBatch();
+
+                    // simular uma excessão if (i == 8000) throw new SQLException();
+                }
+                //para executar de fato precisa disso
+                connection.commit();
+            }catch (SQLException e) {
+                connection.rollback();
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void update(final EmployeeEntity entity){
         String sql = "UPDATE employees set name = ?, salary = ?, birthday = ? WHERE id = ?";
         try (var connection = ConnectionUtil.getConnection();
