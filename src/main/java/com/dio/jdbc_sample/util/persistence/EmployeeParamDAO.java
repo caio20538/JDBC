@@ -1,5 +1,6 @@
 package com.dio.jdbc_sample.util.persistence;
 
+import com.dio.jdbc_sample.util.persistence.Entity.ContactEntity;
 import com.dio.jdbc_sample.util.persistence.Entity.EmployeeEntity;
 import com.mysql.cj.jdbc.StatementImpl;
 
@@ -167,7 +168,11 @@ public class EmployeeParamDAO {
 
     public EmployeeEntity findById(final long id){
         var entity = new EmployeeEntity();
-        var sql = "SELECT * FROM employees WHERE id = ?";
+        var contact = new ContactEntity();
+        var sql = "SELECT e.*, c.description, c.type " +
+        "FROM employees e " +
+        "INNER JOIN contacts c ON e.contact_id = c.id " +
+        "WHERE e.id = ?";
 
         try(var connection = ConnectionUtil.getConnection();
             var statement = connection.prepareStatement(sql)
@@ -183,6 +188,10 @@ public class EmployeeParamDAO {
                 var birthdayInstant = result.getTimestamp("birthday").toInstant();
                 var birthday = OffsetDateTime.ofInstant(birthdayInstant, UTC);
                 entity.setBirthday(birthday);
+
+                contact.setDescription(result.getString("description"));
+                contact.setType(result.getString("type"));
+                entity.setContact(contact);
             }
 
         } catch (SQLException e) {

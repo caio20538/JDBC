@@ -8,6 +8,7 @@ public class EmployeeEntity {
     private String name;
     private OffsetDateTime birthday;
     private BigDecimal salary;
+    private ContactEntity contact;
 
     public long getId() {
         return id;
@@ -41,6 +42,14 @@ public class EmployeeEntity {
         this.salary = salary;
     }
 
+    public ContactEntity getContact() {
+        return contact;
+    }
+
+    public void setContact(ContactEntity contact) {
+        this.contact = contact;
+    }
+
     @Override
     public String toString() {
         return "EmployeeEntity{" +
@@ -48,6 +57,7 @@ public class EmployeeEntity {
                 ", name='" + name + '\'' +
                 ", birthday=" + birthday +
                 ", salary=" + salary +
+                ", contact=" + contact +
                 '}';
     }
 }

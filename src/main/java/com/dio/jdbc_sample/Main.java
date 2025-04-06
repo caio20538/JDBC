@@ -1,9 +1,7 @@
 package com.dio.jdbc_sample;
 
-import com.dio.jdbc_sample.util.persistence.ConnectionUtil;
-import com.dio.jdbc_sample.util.persistence.EmployeeAuditDAO;
-import com.dio.jdbc_sample.util.persistence.EmployeeDAO;
-import com.dio.jdbc_sample.util.persistence.EmployeeParamDAO;
+import com.dio.jdbc_sample.util.persistence.*;
+import com.dio.jdbc_sample.util.persistence.Entity.ContactEntity;
 import com.dio.jdbc_sample.util.persistence.Entity.EmployeeEntity;
 import net.datafaker.Faker;
 import org.flywaydb.core.Flyway;
@@ -24,6 +22,7 @@ public class Main {
     private final static EmployeeParamDAO employeeDAO = new EmployeeParamDAO();
     private final static EmployeeAuditDAO employeeAuditDAO = new EmployeeAuditDAO();
     private final static Faker faker = new Faker(new Locale("pt", "BR"));
+    private final static ContactDAO contactDAO = new ContactDAO();
 
     public static void main(String[] args) {
 //        try(var connection = ConnectionUtil.getConnection()){
@@ -38,7 +37,7 @@ public class Main {
         flyway.migrate();
 
 //        var employee = new EmployeeEntity();
-//
+
 //        employee.setName("pedro");
 //        employee.setSalary(new BigDecimal("4000.00"));
 //        employee.setBirthday(OffsetDateTime.now().minusYears(24));
@@ -89,19 +88,41 @@ public class Main {
 //        employeeDAO.delete(employee4.getId());
 //
 //        employeeAuditDAO.findAll().forEach(System.out::println);
-        var entities = Stream.generate(() -> {
-            var employees = new EmployeeEntity();
-            employees.setName(faker.name().fullName());
-            employees.setSalary(new BigDecimal(faker.number().digits(4)));
+//        var entities = Stream.generate(() -> {
+//            var employees = new EmployeeEntity();
+//            employees.setName(faker.name().fullName());
+//            employees.setSalary(new BigDecimal(faker.number().digits(4)));
+//
+//            int idade = faker.number().numberBetween(20, 41); // Gera uma idade entre 20 e 40 anos
+//            LocalDate dataNascimento = LocalDate.now().minusYears(idade);
+//            OffsetDateTime dataNascimentoOffset = OffsetDateTime.of(dataNascimento, LocalTime.MIN, UTC);
+//
+//            employees.setBirthday(dataNascimentoOffset);
+//            return employees;
+//        }).limit(10000).toList();
+//
+//        employeeDAO.insertBath(entities);
 
-            int idade = faker.number().numberBetween(20, 41); // Gera uma idade entre 20 e 40 anos
-            LocalDate dataNascimento = LocalDate.now().minusYears(idade);
-            OffsetDateTime dataNascimentoOffset = OffsetDateTime.of(dataNascimento, LocalTime.MIN, UTC);
+//        var employee = new EmployeeEntity();
+//
+//        employee.setName("pedro");
+//        employee.setSalary(new BigDecimal("4000.00"));
+//        employee.setBirthday(OffsetDateTime.now().minusYears(24));
+//
+//        System.out.println(employee);
+//        employeeDAO.insert(employee);
+//        System.out.println(employee);
+//
+//        var contact = new ContactEntity();
+////
+//        contact.setDescription("pedro@pedro.com");
+//        contact.setType("e-mail");
+//        contact.setEmployee(employee);
+//        contactDAO.insert(contact);
 
-            employees.setBirthday(dataNascimentoOffset);
-            return employees;
-        }).limit(10000).toList();
+//        System.out.println(employeeDAO.findById(1));
 
-        employeeDAO.insertBath(entities);
+        employeeDAO.delete(1);
+
     }
 }
