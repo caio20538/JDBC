@@ -170,10 +170,9 @@ public class EmployeeParamDAO {
         var entity = new EmployeeEntity();
         var contact = new ContactEntity();
         var sql = "SELECT e.*, c.description, c.type " +
-        "FROM employees e " +
-        "INNER JOIN contacts c ON e.contact_id = c.id " +
-        "WHERE e.id = ?";
-
+                "FROM employees e " +
+                "INNER JOIN contacts c ON c.employee_id = e.id " +
+                "WHERE e.id = ?";
         try(var connection = ConnectionUtil.getConnection();
             var statement = connection.prepareStatement(sql)
         ){

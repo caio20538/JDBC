@@ -120,9 +120,9 @@ public class Main {
 //        contact.setEmployee(employee);
 //        contactDAO.insert(contact);
 
-//        System.out.println(employeeDAO.findById(1));
+        System.out.println(employeeDAO.findById(2));
 
-        employeeDAO.delete(1);
+//        employeeDAO.delete(1);
 
     }
 }
