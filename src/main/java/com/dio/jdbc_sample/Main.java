@@ -119,10 +119,17 @@ public class Main {
 //        contact.setType("e-mail");
 //        contact.setEmployee(employee);
 //        contactDAO.insert(contact);
+//
+//        var contact2 = new ContactEntity();
+////
+//        contact2.setDescription("619999999");
+//        contact2.setType("celular");
+//        contact2.setEmployee(employee);
+//        contactDAO.insert(contact2);
 
-        System.out.println(employeeDAO.findById(2));
+        //System.out.println(employeeDAO.findById(3));
 
 //        employeeDAO.delete(1);
-
+        employeeDAO.findAll().forEach(System.out::println);
     }
 }

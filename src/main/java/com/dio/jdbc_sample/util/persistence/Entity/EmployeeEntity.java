@@ -2,13 +2,14 @@ package com.dio.jdbc_sample.util.persistence.Entity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 public class EmployeeEntity {
     private long id;
     private String name;
     private OffsetDateTime birthday;
     private BigDecimal salary;
-    private ContactEntity contact;
+    private List<ContactEntity> contact;
 
     public long getId() {
         return id;
@@ -42,11 +43,11 @@ public class EmployeeEntity {
         this.salary = salary;
     }
 
-    public ContactEntity getContact() {
+    public List<ContactEntity> getContact() {
         return contact;
     }
 
-    public void setContact(ContactEntity contact) {
+    public void setContact(List<ContactEntity> contact) {
         this.contact = contact;
     }
 

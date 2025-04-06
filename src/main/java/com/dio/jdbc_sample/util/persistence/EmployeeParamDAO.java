@@ -16,6 +16,8 @@ import static java.util.TimeZone.LONG;
 
 public class EmployeeParamDAO {
 
+    private final ContactDAO contactDAO = new ContactDAO();
+
     public void insert(final EmployeeEntity entity) {
         String sql = "INSERT INTO employees (name, salary, birthday) VALUES (?, ?, ?)";
 
@@ -156,6 +158,7 @@ public class EmployeeParamDAO {
                 var birthdayInstant = result.getTimestamp("birthday").toInstant();
                 var birthday = OffsetDateTime.ofInstant(birthdayInstant, UTC);
                 entity.setBirthday(birthday);
+                entity.setContact(contactDAO.findByEmployeeId(result.getLong("id")));
                 entities.add(entity);
 
            }
@@ -168,31 +171,33 @@ public class EmployeeParamDAO {
 
     public EmployeeEntity findById(final long id){
         var entity = new EmployeeEntity();
-        var contact = new ContactEntity();
         var sql = "SELECT e.*, c.description, c.type " +
                 "FROM employees e " +
-                "INNER JOIN contacts c ON c.employee_id = e.id " +
+                "LEFT JOIN contacts c ON c.employee_id = e.id " +
                 "WHERE e.id = ?";
-        try(var connection = ConnectionUtil.getConnection();
-            var statement = connection.prepareStatement(sql)
-        ){
+        try (var connection = ConnectionUtil.getConnection();
+             var statement = connection.prepareStatement(sql)) {
+
             statement.setLong(1, id);
             statement.executeQuery();
-
             var result = statement.getResultSet();
-            if (result.next()){
+
+            if (result.next()) {
                 entity.setId(result.getLong("id"));
                 entity.setName(result.getString("name"));
                 entity.setSalary(result.getBigDecimal("salary"));
                 var birthdayInstant = result.getTimestamp("birthday").toInstant();
                 var birthday = OffsetDateTime.ofInstant(birthdayInstant, UTC);
                 entity.setBirthday(birthday);
+                entity.setContact(new ArrayList<>());
 
-                contact.setDescription(result.getString("description"));
-                contact.setType(result.getString("type"));
-                entity.setContact(contact);
+                do {
+                    var contact = new ContactEntity();
+                    contact.setDescription(result.getString("description"));
+                    contact.setType(result.getString("type"));
+                    entity.getContact().add(contact);
+                } while (result.next());
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

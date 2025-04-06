@@ -5,6 +5,9 @@ import com.dio.jdbc_sample.util.persistence.Entity.EmployeeEntity;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -34,4 +37,30 @@ public class ContactDAO {
             e.printStackTrace();
         }
     }
+
+    public List<ContactEntity> findByEmployeeId(final long employeeId) {
+        List<ContactEntity> entities = new ArrayList<>();
+
+        try (var connection = ConnectionUtil.getConnection();
+             var statement = connection.prepareStatement("SELECT * FROM contacts WHERE employee_id = ?")
+        ) {
+            statement.setLong(1, employeeId);
+            var result = statement.executeQuery();
+
+            while (result.next()) {
+                var entity = new ContactEntity();
+                entity.setId(result.getLong("id"));
+                entity.setDescription(result.getString("description"));
+                entity.setType(result.getString("type"));
+                entity.setEmployee(new EmployeeEntity());
+                entity.getEmployee().setId(result.getLong("employee_id"));
+                entities.add(entity);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return entities;
+    }
+
 }
