@@ -35,7 +35,7 @@ public class Main {
 //        }
 
         var flyway = Flyway.configure()
-                .dataSource("jdbc:mysql://localhost:3306/jdbcsample", "root", "")
+                .dataSource("jdbc:mysql://localhost:3306/jdbcsample", "root", "31052004Dada")
                 .load();
         flyway.migrate();
 
@@ -159,7 +159,7 @@ public class Main {
 
         entities.forEach(employeeDAO::insert);*/
 
-        moduleDAO.findAll().forEach(System.out::println);
+        //moduleDAO.findAll().forEach(System.out::println);
 
     }
 }
