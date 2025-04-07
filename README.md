@@ -37,7 +37,7 @@ O projeto visa ensinar na prática como:
 O **Flyway** é uma ferramenta de **versionamento e migração de banco de dados**. Ele permite que você mantenha o histórico de alterações no schema de forma automatizada e reprodutível, evitando inconsistências entre ambientes (dev, staging, produção).
 
 ### ✅ Benefícios:
-- Versionamento automatizado com scripts SQL numerados (`V1__create_tables.sql`, `V2__add_constraints.sql`...).
+- Versionamento automatizado com scripts SQL numerados (`V202504021511__create_tables.sql`...). (2025-04-02 15:11)
 - Integração simples com Spring Boot.
 - Aplicação das alterações de forma ordenada e segura.
 
