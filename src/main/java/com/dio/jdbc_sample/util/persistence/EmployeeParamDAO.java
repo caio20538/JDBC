@@ -2,6 +2,7 @@ package com.dio.jdbc_sample.util.persistence;
 
 import com.dio.jdbc_sample.util.persistence.Entity.ContactEntity;
 import com.dio.jdbc_sample.util.persistence.Entity.EmployeeEntity;
+import com.dio.jdbc_sample.util.persistence.Entity.ModuleEntity;
 import com.mysql.cj.jdbc.StatementImpl;
 
 import java.sql.SQLException;
@@ -17,6 +18,7 @@ import static java.util.TimeZone.LONG;
 public class EmployeeParamDAO {
 
     private final ContactDAO contactDAO = new ContactDAO();
+    private final AccessDAO accessDAO = new AccessDAO();
 
     public void insert(final EmployeeEntity entity) {
         String sql = "INSERT INTO employees (name, salary, birthday) VALUES (?, ?, ?)";
@@ -32,6 +34,13 @@ public class EmployeeParamDAO {
 
             int affectedRows = statement.executeUpdate();
             System.out.printf("Foram afetados %s registros na base de dados%n", affectedRows);
+
+            if (statement instanceof StatementImpl impl) {
+                entity.setId(impl.getLastInsertID());
+                entity.getModuleEntities().stream()
+                        .map(ModuleEntity::getId)
+                        .forEach(m -> accessDAO.insert(entity.getId(), m));
+            }
 
             // Pega o ID gerado automaticamente
             try (var generatedKeys = statement.getGeneratedKeys()) {

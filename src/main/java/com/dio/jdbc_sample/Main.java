@@ -3,6 +3,7 @@ package com.dio.jdbc_sample;
 import com.dio.jdbc_sample.util.persistence.*;
 import com.dio.jdbc_sample.util.persistence.Entity.ContactEntity;
 import com.dio.jdbc_sample.util.persistence.Entity.EmployeeEntity;
+import com.dio.jdbc_sample.util.persistence.Entity.ModuleEntity;
 import net.datafaker.Faker;
 import org.flywaydb.core.Flyway;
 
@@ -11,6 +12,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.stream.Stream;
 
@@ -32,7 +34,7 @@ public class Main {
 //        }
 
         var flyway = Flyway.configure()
-                .dataSource("jdbc:mysql://localhost:3306/jdbcsample", "root", "!")
+                .dataSource("jdbc:mysql://localhost:3306/jdbcsample", "root", "")
                 .load();
         flyway.migrate();
 
@@ -130,6 +132,37 @@ public class Main {
         //System.out.println(employeeDAO.findById(3));
 
 //        employeeDAO.delete(1);
-        employeeDAO.findAll().forEach(System.out::println);
+        //employeeDAO.findAll().forEach(System.out::println);
+
+        employeeAuditDAO.findAll().forEach(System.out::println);
+        var entities = Stream.generate(() -> {
+            var employees = new EmployeeEntity();
+            employees.setName(faker.name().fullName());
+            employees.setSalary(new BigDecimal(faker.number().digits(4)));
+
+            int idade = faker.number().numberBetween(20, 41); // Gera uma idade entre 20 e 40 anos
+            LocalDate dataNascimento = LocalDate.now().minusYears(idade);
+            OffsetDateTime dataNascimentoOffset = OffsetDateTime.of(dataNascimento, LocalTime.MIN, UTC);
+
+            employees.setBirthday(dataNascimentoOffset);
+
+            employees.setModuleEntities(new ArrayList<>());
+            var moduleAmount = faker.number().numberBetween(1, 4);
+            for (int i = 0; i < moduleAmount; i++) {
+                var module = new ModuleEntity();
+                module.setId(i+1);
+                employees.getModuleEntities().add(module);
+            }
+            return employees;
+        }).limit(5).toList();
+
+        entities.forEach(employeeDAO::insert);
     }
 }
+
+
+/***
+ * colaborador (1 - 1) --- (1 - 1) Endereco (1 - 1)
+ * colaborador (1 - 1) --- (n - 1) contatos (1 - n)
+ * colaborador (1 - n) --- (n - 1) modulos (n - n)
+ */

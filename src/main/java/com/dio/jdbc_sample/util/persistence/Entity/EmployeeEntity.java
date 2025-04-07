@@ -10,6 +10,7 @@ public class EmployeeEntity {
     private OffsetDateTime birthday;
     private BigDecimal salary;
     private List<ContactEntity> contact;
+    private List<ModuleEntity> moduleEntities;
 
     public long getId() {
         return id;
@@ -51,6 +52,14 @@ public class EmployeeEntity {
         this.contact = contact;
     }
 
+    public List<ModuleEntity> getModuleEntities() {
+        return moduleEntities;
+    }
+
+    public void setModuleEntities(List<ModuleEntity> moduleEntities) {
+        this.moduleEntities = moduleEntities;
+    }
+
     @Override
     public String toString() {
         return "EmployeeEntity{" +
@@ -59,6 +68,7 @@ public class EmployeeEntity {
                 ", birthday=" + birthday +
                 ", salary=" + salary +
                 ", contact=" + contact +
+                ", moduleEntities=" + moduleEntities +
                 '}';
     }
 }
