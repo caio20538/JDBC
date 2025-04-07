@@ -25,6 +25,7 @@ public class Main {
     private final static EmployeeAuditDAO employeeAuditDAO = new EmployeeAuditDAO();
     private final static Faker faker = new Faker(new Locale("pt", "BR"));
     private final static ContactDAO contactDAO = new ContactDAO();
+    private final static ModuleDAO moduleDAO = new ModuleDAO();
 
     public static void main(String[] args) {
 //        try(var connection = ConnectionUtil.getConnection()){
@@ -134,7 +135,7 @@ public class Main {
 //        employeeDAO.delete(1);
         //employeeDAO.findAll().forEach(System.out::println);
 
-        employeeAuditDAO.findAll().forEach(System.out::println);
+        /*employeeAuditDAO.findAll().forEach(System.out::println);
         var entities = Stream.generate(() -> {
             var employees = new EmployeeEntity();
             employees.setName(faker.name().fullName());
@@ -156,7 +157,10 @@ public class Main {
             return employees;
         }).limit(5).toList();
 
-        entities.forEach(employeeDAO::insert);
+        entities.forEach(employeeDAO::insert);*/
+
+        moduleDAO.findAll().forEach(System.out::println);
+
     }
 }
 
