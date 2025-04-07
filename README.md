@@ -47,7 +47,5 @@ O **Flyway** é uma ferramenta de **versionamento e migração de banco de dados
 
 Uma alternativa bastante utilizada ao Flyway é o **Liquibase**. Ele também permite controlar versões do banco, mas com maior flexibilidade na escrita dos scripts (suporte a XML, YAML, JSON e SQL). É ideal para times que preferem uma abordagem mais descritiva ou declarativa.
 
----
 
-## 📂 Estrutura do Projeto
 
